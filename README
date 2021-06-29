@@ -1,0 +1,12 @@
+lcam - ICameraProvider and ICameraDevice bindings for Lua
+=========================================================
+
+WIP - at the time of writing this readme, only the Soong bp files and a vendored
+Lua is set up. The rest is TBD or not pushed, or the README might not be up to
+date (:
+
+Build
+-----
+- add lcam to your manifest (e.g., as external/lcam) or clone the git manually
+- . build/envsetup.sh && lunch <lunch-target>
+- m lcam
