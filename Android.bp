@@ -1,16 +1,72 @@
-cc_binary {
-  name: "lcam",
+lcam_liblua_srcs = [
+    "src/lua-5.4.3/src/lapi.c",
+    "src/lua-5.4.3/src/lauxlib.c",
+    "src/lua-5.4.3/src/lbaselib.c",
+    "src/lua-5.4.3/src/lcode.c",
+    "src/lua-5.4.3/src/lcorolib.c",
+    "src/lua-5.4.3/src/lctype.c",
+    "src/lua-5.4.3/src/ldblib.c",
+    "src/lua-5.4.3/src/ldebug.c",
+    "src/lua-5.4.3/src/ldo.c",
+    "src/lua-5.4.3/src/ldump.c",
+    "src/lua-5.4.3/src/lfunc.c",
+    "src/lua-5.4.3/src/lgc.c",
+    "src/lua-5.4.3/src/linit.c",
+    "src/lua-5.4.3/src/liolib.c",
+    "src/lua-5.4.3/src/llex.c",
+    "src/lua-5.4.3/src/lmathlib.c",
+    "src/lua-5.4.3/src/lmem.c",
+    "src/lua-5.4.3/src/loadlib.c",
+    "src/lua-5.4.3/src/lobject.c",
+    "src/lua-5.4.3/src/lopcodes.c",
+    "src/lua-5.4.3/src/loslib.c",
+    "src/lua-5.4.3/src/lparser.c",
+    "src/lua-5.4.3/src/lstate.c",
+    "src/lua-5.4.3/src/lstring.c",
+    "src/lua-5.4.3/src/lstrlib.c",
+    "src/lua-5.4.3/src/ltable.c",
+    "src/lua-5.4.3/src/ltablib.c",
+    "src/lua-5.4.3/src/ltm.c",
+    "src/lua-5.4.3/src/luac.c",
+    "src/lua-5.4.3/src/lundump.c",
+    "src/lua-5.4.3/src/lutf8lib.c",
+    "src/lua-5.4.3/src/lvm.c",
+    "src/lua-5.4.3/src/lzio.c",
+]
+
+cc_defaults {
+  name: "lcam-lua_defaults",
+  cflags: [
+    "-Wall",
+    "-Werror",
+    "-Wno-deprecated-declarations",
+    "-Wno-string-plus-int",
+    "-Os",
+    "-DLUA_USE_LINUX",
+    "-DLUA_COMPAT_5_3",
+  ]
+}
+
+cc_library_static {
+  name: "liblcam-liblua-static",
+  defaults: ["lcam-lua_defaults"],
+  export_include_dirs: ["src/lua-5.4.3/src"],
+  srcs: lcam_liblua_srcs,
+}
+
+cc_library_static {
+  name: "liblcam-static",
   srcs: [
-    "src/lcam.c",
+    "src/lcam.cc",
+    "src/lcam-lib.c",
   ],
   cflags: [
     "-Wall",
     "-Werror",
   ],
   static_libs: [
-    "lcam-liblua",
-  ],
-  shared_libs: [
+    "liblcam-liblua-static",
+    "libutils",
     "android.hardware.camera.provider@2.4",
     "android.hardware.camera.provider@2.5",
     "android.hardware.camera.provider@2.6",
@@ -21,4 +77,33 @@ cc_binary {
     "android.hardware.camera.device@3.5",
     "android.hardware.camera.device@3.6"
   ],
+}
+
+cc_binary {
+  name: "lcam",
+  srcs: [
+    "src/lua-5.4.3/src/lua.c"
+  ],
+  shared_libs: [
+    "libbinder",
+    "liblog",
+    "libbase",
+    "libutils",
+    "libcutils",
+    "libhidlbase",
+  ],
+  static_libs: [
+    "liblcam-static",
+    "liblcam-liblua-static",
+    "android.hardware.camera.provider@2.4",
+    "android.hardware.camera.provider@2.5",
+    "android.hardware.camera.provider@2.6",
+    "android.hardware.camera.common@1.0",
+    "android.hardware.camera.device@1.0",
+    "android.hardware.camera.device@3.2",
+    "android.hardware.camera.device@3.3",
+    "android.hardware.camera.device@3.4",
+    "android.hardware.camera.device@3.5",
+    "android.hardware.camera.device@3.6"
+  ]
 }

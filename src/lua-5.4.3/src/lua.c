@@ -20,6 +20,8 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
+#include "../../lcam-lib.h"
+
 
 #if !defined(LUA_PROGNAME)
 #define LUA_PROGNAME		"lua"
@@ -647,6 +649,8 @@ int main (int argc, char **argv) {
     l_message(argv[0], "cannot create state: not enough memory");
     return EXIT_FAILURE;
   }
+  luaopen_lcam(L);
+  lua_setglobal(L, "lcam");
   lua_pushcfunction(L, &pmain);  /* to call 'pmain' in protected mode */
   lua_pushinteger(L, argc);  /* 1st argument */
   lua_pushlightuserdata(L, argv); /* 2nd argument */
